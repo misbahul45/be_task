@@ -25,7 +25,7 @@ export const UpdateMoodSchema = z.object({
     .number()
     .int()
     .min(0, { message: "moodScore must be at least 0" })
-    .max(10, { message: "moodScore cannot exceed 10" })
+    .max(5, { message: "moodScore cannot exceed 5" })
     .optional(),
   moodLabel: z.enum(Object.values(MoodLabel) as [string, ...string[]]).optional(),
   notes: z.string().optional(),
