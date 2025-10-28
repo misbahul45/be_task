@@ -13,12 +13,28 @@
   "license": "ISC",
   "packageManager": "pnpm@10.17.1",
   "dependencies": {
-    "@prisma/client": "^6.18.0",
+    "@huggingface/inference": "^4.13.0",
+    "@langchain/community": "^1.0.0",
+    "@langchain/core": "^1.0.2",
+    "@langchain/groq": "^1.0.0",
+    "@types/jsonwebtoken": "^9.0.10",
+    "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
     "express": "^5.1.0",
-    "prisma": "^6.18.0"
+    "jsonwebtoken": "^9.0.2",
+    "langchain": "^1.0.2",
+    "resend": "^6.3.0",
+    "zod": "^4.1.12"
   },
   "devDependencies": {
+    "@prisma/client": "6.11.1",
+    "@types/bcrypt": "^6.0.0",
+    "@types/cookie-parser": "^1.4.10",
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.4",
+    "dotenv": "^17.2.3",
+    "prisma": "6.11.1",
     "ts-node-dev": "^2.0.0",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.9.3"

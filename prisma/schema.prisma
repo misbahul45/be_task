@@ -1,11 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -13,37 +7,63 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
-}
-
-generator client {
-  provider = "prisma-client-js"
-}
-
 model User {
-  id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
-  password  String
-  moods     Mood[]
-  createdAt DateTime @default(now())
+  id          String      @id @default(uuid())
+  name        String
+  email       String      @unique
+  password    String
+  emailVerified DateTime?
+  moods       Mood[]
+  sessions    Session[]
+  verifications Verification[]
+  createdAt   DateTime    @default(now())
 }
+
+model Session {
+  id             String   @id @default(uuid())
+  userId         String
+  refreshToken   String?   @unique
+  expiredAt      DateTime
+  user           User     @relation(fields: [userId], references: [id])
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  @@index([userId])
+}
+
+model Verification {
+  id          String       @id @default(uuid())
+  userId      String
+  user        User         @relation(fields: [userId], references: [id])
+  token       String       @unique
+  type        VerificationType
+  expiredAt   DateTime
+  verifiedAt  DateTime?
+  createdAt   DateTime     @default(now())
+
+  @@index([userId])
+}
+
+enum VerificationType {
+  EMAIL_VERIFICATION
+  PASSWORD_RESET
+}
+
 
 model Mood {
-  id         String   @id @default(uuid())
-  userId     String
-  user       User     @relation(fields: [userId], references: [id])
-  date       DateTime
-  moodScore  Int       @db.TinyInt
-  moodLabel  MoodLabel
-  notes      String?   @db.Text
-  createdAt  DateTime  @default(now())
+  id          String    @id @default(uuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
+  date        DateTime
+  moodScore   Int
+  moodLabel   MoodLabel
+  notes       String?   @db.Text
+  embedding   Unsupported("vector(1536)")
+  createdAt   DateTime  @default(now())
 
   @@unique([userId, date])
   @@index([userId])
 }
+
 
 enum MoodLabel {
   HAPPY
@@ -54,4 +74,3 @@ enum MoodLabel {
   EXCITED
   TIRED
 }
-
