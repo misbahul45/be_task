@@ -6,11 +6,8 @@ export const Validation =
   (schema: ZodSchema) =>
   (req: Request, res: Response, next: NextFunction) => {
     try {
-      schema.parse({
-        body: req.body,
-        query: req.query,
-        params: req.params,
-      });
+      console.log(req.body)
+      schema.parse(req.body); 
 
       next();
     } catch (error) {

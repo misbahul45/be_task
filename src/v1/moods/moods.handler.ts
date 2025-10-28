@@ -5,6 +5,7 @@ import { MoodsService } from "./moods.service";
 import { CreateMoodInput, UpdateMoodInput } from "./moods.validation";
 import { getEmbedding } from "@/utils/ai";
 import { ChatService } from "./chat.service";
+import { MoodLabel } from "@prisma/client";
 
 export class MoodsHandler {
   private readonly moodsService = new MoodsService();
@@ -60,9 +61,23 @@ export class MoodsHandler {
   getSummary = async (req: Request, res: Response) => {
     return errorHandler(async () => {
       const userId = req.user?.id!;
-      const period = req.query.period as "week" | "month" | "year";
-      const data = await this.moodsService.getSummary(userId, period);
-      return Responder.success(res, "Mood summary fetched successfully", data);
+      const { period, startDate, endDate, moodLabel } = req.query;
+
+      const options = {
+        period: period as "day" | "week" | "month" | "year" | undefined,
+        startDate: startDate as string | undefined,
+        endDate: endDate as string | undefined,
+        moodLabel: moodLabel as MoodLabel | undefined,
+      };
+
+      const result = await this.moodsService.getSummary(userId, options);
+
+      return Responder.success(
+        res,
+        "Mood summary fetched successfully",
+        result.data,
+        { aiMessage: result.message }
+      );
     });
   };
 
