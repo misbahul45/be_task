@@ -1,51 +1,54 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
+import { errorHandler } from "@/utils/util";
+import { Responder } from "@/utils/response";
 import { UsersService } from "./users.service";
-
-const usersService = new UsersService();
+import { CreateUserInput, UpdateUserInput } from "./users.validation";
 
 export class UsersHandler {
-  getAll = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const result = await usersService.getAll(req.query);
-      res.status(200).json(result);
-    } catch (err) {
-      next(err);
-    }
+  private readonly usersService = new UsersService();
+
+  findAll = async (req: Request, res: Response) => {
+    return errorHandler(async () => {
+      const query = {
+        page: Number(req.query.page) || 1,
+        limit: Number(req.query.limit) || 10,
+        search: req.query.search as string,
+      };
+      const { data, meta } = await this.usersService.findAll(query);
+      return Responder.success(res, "Successfully fetched users", data, meta);
+    });
   };
 
-  getById = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const result = await usersService.getById(req.params.id);
-      res.status(200).json(result);
-    } catch (err) {
-      next(err);
-    }
+  findById = async (req: Request, res: Response) => {
+    return errorHandler(async () => {
+      const { id } = req.params;
+      const data = await this.usersService.findById(id);
+      return Responder.success(res, "Successfully fetched user", data);
+    });
   };
 
-  create = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const result = await usersService.create(req.body);
-      res.status(201).json(result);
-    } catch (err) {
-      next(err);
-    }
+  create = async (req: Request, res: Response) => {
+    return errorHandler(async () => {
+      const body = req.body as CreateUserInput;
+      const data = await this.usersService.create(body);
+      return Responder.success(res, "User created successfully", data);
+    });
   };
 
-  update = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const result = await usersService.update(req.params.id, req.body);
-      res.status(200).json(result);
-    } catch (err) {
-      next(err);
-    }
+  update = async (req: Request, res: Response) => {
+    return errorHandler(async () => {
+      const { id } = req.params;
+      const body = req.body as UpdateUserInput;
+      const data = await this.usersService.update(id, body);
+      return Responder.success(res, "User updated successfully", data);
+    });
   };
 
-  delete = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const result = await usersService.delete(req.params.id);
-      res.status(200).json(result);
-    } catch (err) {
-      next(err);
-    }
+  delete = async (req: Request, res: Response) => {
+    return errorHandler(async () => {
+      const { id } = req.params;
+      const data = await this.usersService.delete(id);
+      return Responder.success(res, "User deleted successfully", data);
+    });
   };
 }

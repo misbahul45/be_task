@@ -7,7 +7,7 @@ import { ServiceResponse } from "@/types/app.type";
 export class UsersService {
   private readonly usersRepo = new UsersRepo();
 
-  async getAll(query: PaginationQuery) {
+  async findAll(query: PaginationQuery) {
     return errorHandler<ServiceResponse>(async () => {
       const result = await this.usersRepo.findAll(query);
       return {
@@ -18,7 +18,7 @@ export class UsersService {
     });
   }
 
-  async getById(id: string) {
+  async findById(id: string) {
     return errorHandler<ServiceResponse>(async () => {
       const user = await this.usersRepo.findById(id);
       if (!user) throw new AppError("User not found", 404, AppErrorCode.NOT_FOUND);

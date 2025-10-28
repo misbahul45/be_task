@@ -7,8 +7,8 @@ import { CreateUserSchema, UpdateUserSchema } from "./users.validation";
 const router = Router();
 const handler = new UsersHandler();
 
-router.get("/", authMiddleware, handler.getAll);
-router.get("/:id", authMiddleware, handler.getById);
+router.get("/", authMiddleware, handler.findAll);
+router.get("/:id", authMiddleware, handler.findById);
 router.post("/", authMiddleware, Validation(CreateUserSchema), handler.create);
 router.put("/:id", authMiddleware, Validation(UpdateUserSchema), handler.update);
 router.delete("/:id", authMiddleware, handler.delete);
