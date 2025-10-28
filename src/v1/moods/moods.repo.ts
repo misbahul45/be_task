@@ -158,6 +158,7 @@ export class MoodsRepo {
     endDate?: string | Date;
     moodLabel?: MoodLabel;
   }
+  
 ) {
   return errorHandler(async () => {
     const period = options?.period || "month";
